@@ -1,4 +1,3 @@
-C:\Projects\Concordium\Final\FriendZone_backend\src\obj\Debug\net6.0\src.csproj.AssemblyReference.cache
 C:\Projects\Concordium\Final\FriendZone_backend\src\obj\Debug\net6.0\src.GeneratedMSBuildEditorConfig.editorconfig
 C:\Projects\Concordium\Final\FriendZone_backend\src\obj\Debug\net6.0\src.AssemblyInfoInputs.cache
 C:\Projects\Concordium\Final\FriendZone_backend\src\obj\Debug\net6.0\src.AssemblyInfo.cs
@@ -64,3 +63,4 @@ C:\Projects\Concordium\Final\FriendZone_backend\src\obj\Debug\net6.0\src.dll
 C:\Projects\Concordium\Final\FriendZone_backend\src\obj\Debug\net6.0\ref\src.dll
 C:\Projects\Concordium\Final\FriendZone_backend\src\obj\Debug\net6.0\src.pdb
 C:\Projects\Concordium\Final\FriendZone_backend\src\obj\Debug\net6.0\src.genruntimeconfig.cache
+C:\Projects\Concordium\Final\FriendZone_backend\src\obj\Debug\net6.0\src.csproj.AssemblyReference.cache

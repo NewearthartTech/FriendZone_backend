@@ -40,7 +40,7 @@ namespace src.Controllers
             verifier.walletAddress = address;
             await verifierCollection.InsertOneAsync(verifier);
 
-            return await GetVerifier(verifier.id);
+            return await GetVerifier(verifier.Id);
         }
 
         [HttpGet("prove/{challenge}")]
@@ -87,7 +87,7 @@ namespace src.Controllers
         private async Task<Verifier> GetVerifier(string id)
         {
             var verifierCollection = _db.getCollection<Verifier>();
-            var verifier = await verifierCollection.Find(v => v.id == id).FirstAsync();
+            var verifier = await verifierCollection.Find(v => v.Id == id).FirstAsync();
             return verifier;
         }
 
@@ -99,7 +99,7 @@ namespace src.Controllers
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier,user.id),
+                new Claim(ClaimTypes.NameIdentifier,user.Id),
             };
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],
                 _config["Jwt:Audience"],

@@ -10,7 +10,7 @@ namespace src.models
     {
         [BsonId(IdGenerator = typeof(StringObjectIdGenerator))]
         [BsonRepresentation(BsonType.ObjectId)]
-        public string id { get; set; } = "";
+        public string Id { get; set; } = "";
         public string Challenge { get; set; } = "";
         public string walletAddress { get; set; } = "";
     }
