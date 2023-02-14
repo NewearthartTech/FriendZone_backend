@@ -63,4 +63,3 @@ C:\Projects\Concordium\Final\FriendZone_backend\src\obj\Debug\net6.0\src.dll
 C:\Projects\Concordium\Final\FriendZone_backend\src\obj\Debug\net6.0\ref\src.dll
 C:\Projects\Concordium\Final\FriendZone_backend\src\obj\Debug\net6.0\src.pdb
 C:\Projects\Concordium\Final\FriendZone_backend\src\obj\Debug\net6.0\src.genruntimeconfig.cache
-C:\Projects\Concordium\Final\FriendZone_backend\src\obj\Debug\net6.0\src.csproj.AssemblyReference.cache

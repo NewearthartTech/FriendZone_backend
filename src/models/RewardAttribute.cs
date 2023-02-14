@@ -28,5 +28,6 @@ namespace src.models
         public float AmountPaidPerClick { get; set; }
         [Required]
         public int MaxPaidClicksPerUser { get; set; }
+        public int NumberOfUsers { get; set; } = 0;
     }
 }

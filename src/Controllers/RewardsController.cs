@@ -76,7 +76,6 @@ namespace src.Controllers
 
                     if (updated.MatchedCount != 1)
                     {
-                        //probably we have JWT error
                         throw new Exception("failed to update referal");
                     }
 
@@ -112,9 +111,11 @@ namespace src.Controllers
             var updated = await referalCollection.UpdateOneAsync(r => r.Id == referal.Id,
                Builders<Referal>.Update.Set(u => u.HasClaimed, true));
 
+            var updated2 = await referalCollection.UpdateOneAsync(r => r.Id == referal.Id,
+              Builders<Referal>.Update.Set(u => u.AmountToClaim, 0));
+
             if (updated.MatchedCount != 1)
             {
-                //probably we have JWT error
                 throw new Exception("failed to update referal");
             }
 
@@ -124,6 +125,30 @@ namespace src.Controllers
         [HttpPost("referal")]
         public async Task<ReferalResponse> CreateReferal([FromBody]Referal referal)
         {
+            var rewardAttributeCollection = _db.getCollection<RewardAttribute>();
+            var rewardAttribute = await rewardAttributeCollection.Find(w => w.RewardLink == System.Web.HttpUtility.UrlDecode(referal.RewardLink)).FirstAsync();
+
+            if (rewardAttribute == null)
+            {
+                throw new Exception("No reward found");
+            }
+
+            if (rewardAttribute.NumberOfUsers < rewardAttribute.NumberOfUsersAbleToClaim)
+            {
+                rewardAttribute.NumberOfUsers = rewardAttribute.NumberOfUsers + 1;
+
+                var updatedAtt = await rewardAttributeCollection.UpdateOneAsync(r => r.Id == rewardAttribute.Id,
+               Builders<RewardAttribute>.Update.Set(u => u.NumberOfUsers, rewardAttribute.NumberOfUsers));
+
+                if (updatedAtt.MatchedCount != 1)
+                {
+                    throw new Exception("failed to update referal");
+                }
+            } else
+            {
+                throw new Exception("Maximum number of users reached that can cliam reward");
+            }
+
             var referalCollection = _db.getCollection<Referal>();
             await referalCollection.InsertOneAsync(referal);
 
@@ -135,9 +160,9 @@ namespace src.Controllers
 
             if (updated.MatchedCount != 1)
             {
-                //probably we have JWT error
                 throw new Exception("failed to update referal");
             }
+
 
             return await GetReferal(referalLink);
         }
