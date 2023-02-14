@@ -39,7 +39,7 @@ namespace src.Controllers
             return await rewardAttributeCollection.Find(r => r.RewardLink == System.Web.HttpUtility.UrlDecode(rewardlink)).FirstAsync();
         }
 
-        [HttpGet("{walletaddress}")]
+        [HttpGet("u/{walletaddress}")]
         public async Task<RewardAttribute[]> GetAllRewardAttributedByWalletAddress(string walletaddress)
         {
             var rewardAttributeCollection = _db.getCollection<RewardAttribute>();
@@ -55,7 +55,7 @@ namespace src.Controllers
             return await GetRewardAttributes(rewardAttribute.RewardLink);
         }
 
-        [HttpGet("{personallink}")]
+        [HttpGet("ref/{personallink}")]
         public async Task<ReferalResponse> GetReferalInfo(string personallink)
         {
             var referalCollection = _db.getCollection<Referal>();
