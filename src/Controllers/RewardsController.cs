@@ -11,6 +11,12 @@ namespace src.Controllers
         public RewardAttribute RewardAttribute { get; set; }
     }
 
+    public class RewardClaim
+    {
+        public string PersonalLink { get; set; }
+        public string WalletAddress { get; set; }
+    }
+
     [Route("api/[controller]")]
     [ApiController]
     public class RewardsController : ControllerBase
@@ -82,21 +88,21 @@ namespace src.Controllers
             return referalResponse;
         }
 
-        [HttpGet("claim/{personallink}/{walletaddress}")]
-        public async Task<ReferalResponse> ClaimReward(string personallink, string walletaddress)
+        [HttpPost("claimreward")]
+        public async Task<ReferalResponse> ClaimReward([FromBody] RewardClaim rewardClaim)
         {
-            if(String.IsNullOrWhiteSpace(personallink))
+            if(String.IsNullOrWhiteSpace(rewardClaim.PersonalLink))
             {
                 throw new Exception("personal link can not be empty");
             }
 
-            if(String.IsNullOrWhiteSpace(walletaddress))
+            if(String.IsNullOrWhiteSpace(rewardClaim.WalletAddress))
             {
                 throw new Exception("Wallet address cannot be empty");
             }
 
             var referalCollection = _db.getCollection<Referal>();
-            var referal = await referalCollection.Find(r => r.PersonalLink == System.Web.HttpUtility.UrlDecode(personallink) && r.WalletAddress == walletaddress).FirstAsync();
+            var referal = await referalCollection.Find(r => r.PersonalLink == System.Web.HttpUtility.UrlDecode(rewardClaim.PersonalLink) && r.WalletAddress == rewardClaim.WalletAddress).FirstAsync();
             
             if (referal == null)
             {
@@ -112,7 +118,7 @@ namespace src.Controllers
                 throw new Exception("failed to update referal");
             }
 
-            return await GetReferal(personallink);
+            return await GetReferal(rewardClaim.PersonalLink);
         }
 
         [HttpPost("referal")]
