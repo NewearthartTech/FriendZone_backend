@@ -59,13 +59,60 @@ namespace src.Controllers
             var referal = await referalCollection.Find(r => r.PersonalLink == System.Web.HttpUtility.UrlDecode(personallink)).FirstAsync();
             if(referal != null)
             {
-                referalResponse.Referal = referal;
-
                 var rewardAttribute = await GetRewardAttributes(referal.RewardLink);
                 referalResponse.RewardAttribute = rewardAttribute;
+
+                if (referal.HasClaimed == false && (referal.AmountToClaim/rewardAttribute.AmountPaidPerClick) <= rewardAttribute.MaxPaidClicksPerUser)
+                {
+                    referal.AmountToClaim = referal.AmountToClaim + rewardAttribute.AmountPaidPerClick;
+                    var updated = await referalCollection.UpdateOneAsync(r => r.Id == referal.Id,
+                        Builders<Referal>.Update.Set(u => u.AmountToClaim, referal.AmountToClaim));
+
+                    if (updated.MatchedCount != 1)
+                    {
+                        //probably we have JWT error
+                        throw new Exception("failed to update referal");
+                    }
+
+                }
+
+                referalResponse.Referal = referal;
             }
 
             return referalResponse;
+        }
+
+        [HttpGet("claim/{personallink}/{walletaddress}")]
+        public async Task<ReferalResponse> ClaimReward(string personallink, string walletaddress)
+        {
+            if(String.IsNullOrWhiteSpace(personallink))
+            {
+                throw new Exception("personal link can not be empty");
+            }
+
+            if(String.IsNullOrWhiteSpace(walletaddress))
+            {
+                throw new Exception("Wallet address cannot be empty");
+            }
+
+            var referalCollection = _db.getCollection<Referal>();
+            var referal = await referalCollection.Find(r => r.PersonalLink == System.Web.HttpUtility.UrlDecode(personallink) && r.WalletAddress == walletaddress).FirstAsync();
+            
+            if (referal == null)
+            {
+                throw new Exception("Referal not found");
+            }
+
+            var updated = await referalCollection.UpdateOneAsync(r => r.Id == referal.Id,
+               Builders<Referal>.Update.Set(u => u.HasClaimed, true));
+
+            if (updated.MatchedCount != 1)
+            {
+                //probably we have JWT error
+                throw new Exception("failed to update referal");
+            }
+
+            return await GetReferal(personallink);
         }
 
         [HttpPost("referal")]
@@ -86,7 +133,7 @@ namespace src.Controllers
                 throw new Exception("failed to update referal");
             }
 
-            return await GetReferalInfo(referalLink);
+            return await GetReferal(referalLink);
         }
 
 
@@ -96,6 +143,24 @@ namespace src.Controllers
             var referalCollection = _db.getCollection<Referal>();
             var referals = await referalCollection.Find(r => r.WalletAddress == walletaddress).ToListAsync();
             return referals.ToArray();
+        }
+
+        private async Task<ReferalResponse> GetReferal(string personallink)
+        {
+            var referalCollection = _db.getCollection<Referal>();
+            var rewardAttributeCollection = _db.getCollection<RewardAttribute>();
+
+            var referalResponse = new ReferalResponse();
+            var referal = await referalCollection.Find(r => r.PersonalLink == System.Web.HttpUtility.UrlDecode(personallink)).FirstAsync();
+            if (referal != null)
+            {
+                referalResponse.Referal = referal;
+
+                var rewardAttribute = await GetRewardAttributes(referal.RewardLink);
+                referalResponse.RewardAttribute = rewardAttribute;
+            }
+
+            return referalResponse;
         }
     }
 }
