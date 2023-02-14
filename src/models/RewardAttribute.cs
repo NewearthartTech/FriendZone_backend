@@ -24,5 +24,9 @@ namespace src.models
         public string RewardLink { get; set; }
         [Required]
         public string WalletAddress { get; set; }
+        [Required]
+        public float AmountPaidPerClick { get; set; }
+        [Required]
+        public float RewardAmount { get; set; }
     }
 }
