@@ -27,6 +27,6 @@ namespace src.models
         [Required]
         public float AmountPaidPerClick { get; set; }
         [Required]
-        public float RewardAmount { get; set; }
+        public int MaxPaidClicksPerUser { get; set; }
     }
 }
