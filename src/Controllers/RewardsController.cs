@@ -33,11 +33,11 @@ namespace src.Controllers
         }
 
 
-        [HttpGet("{rewardlink}")]
-        public async Task<RewardAttribute> GetRewardAttributes(string rewardlink)
+        [HttpGet("{rewardid}")]
+        public async Task<RewardAttribute> GetRewardAttributes(string rewardid)
         {
             var rewardAttributeCollection = _db.getCollection<RewardAttribute>();
-            return await rewardAttributeCollection.Find(r => r.RewardLink == System.Web.HttpUtility.UrlDecode(rewardlink)).FirstAsync();
+            return await rewardAttributeCollection.Find(r => r.Id == rewardid).FirstAsync();
         }
 
         [HttpGet("u/{walletaddress}")]
@@ -66,7 +66,7 @@ namespace src.Controllers
             var referal = await referalCollection.Find(r => r.PersonalLink == System.Web.HttpUtility.UrlDecode(personallink)).FirstAsync();
             if(referal != null)
             {
-                var rewardAttribute = await GetRewardAttributes(referal.RewardLink);
+                var rewardAttribute = await GetRewardAttributes(referal.RewardId);
                 referalResponse.RewardAttribute = rewardAttribute;
 
                 if (referal.HasClaimed == false && (referal.AmountToClaim/rewardAttribute.AmountPaidPerClick) <= rewardAttribute.MaxPaidClicksPerUser)
@@ -127,7 +127,7 @@ namespace src.Controllers
         public async Task<ReferalResponse> CreateReferal([FromBody]Referal referal)
         {
             var rewardAttributeCollection = _db.getCollection<RewardAttribute>();
-            var rewardAttribute = await rewardAttributeCollection.Find(w => w.RewardLink == System.Web.HttpUtility.UrlDecode(referal.RewardLink)).FirstAsync();
+            var rewardAttribute = await rewardAttributeCollection.Find(w => w.Id == referal.RewardId).FirstAsync();
 
             if (rewardAttribute == null)
             {
@@ -188,7 +188,7 @@ namespace src.Controllers
             {
                 referalResponse.Referal = referal;
 
-                var rewardAttribute = await GetRewardAttributes(referal.RewardLink);
+                var rewardAttribute = await GetRewardAttributes(referal.RewardId);
                 referalResponse.RewardAttribute = rewardAttribute;
             }
 

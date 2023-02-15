@@ -16,7 +16,7 @@ namespace src.models
         [Required]
         public string WalletAddress { get; set; }
         [Required]
-        public string RewardLink { get; set; }
+        public string RewardId { get; set; }
         public float AmountToClaim { get; set; } = 0;
         public bool HasClaimed { get; set; } = false;
     }
