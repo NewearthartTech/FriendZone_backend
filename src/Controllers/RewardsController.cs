@@ -32,6 +32,7 @@ namespace src.Controllers
             _config = config;
         }
 
+
         [HttpGet("{rewardlink}")]
         public async Task<RewardAttribute> GetRewardAttributes(string rewardlink)
         {
@@ -153,7 +154,7 @@ namespace src.Controllers
             await referalCollection.InsertOneAsync(referal);
 
             var ounce = referal.Id;
-            var referalLink = "http://frndz.io/" + ounce;
+            var referalLink = _config.GetSection("Domain:Name").Value + ounce;
 
             var updated = await referalCollection.UpdateOneAsync(r => r.Id == referal.Id,
                Builders<Referal>.Update.Set(u => u.PersonalLink, referalLink));
