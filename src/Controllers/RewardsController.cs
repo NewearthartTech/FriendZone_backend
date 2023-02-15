@@ -53,7 +53,7 @@ namespace src.Controllers
         {
             var rewardAttributeCollection = _db.getCollection<RewardAttribute>();
             await rewardAttributeCollection.InsertOneAsync(rewardAttribute);
-            return await GetRewardAttributes(rewardAttribute.RewardLink);
+            return await GetRewardAttributes(rewardAttribute.Id);
         }
 
         [HttpGet("ref/{personallink}")]
@@ -160,7 +160,7 @@ namespace src.Controllers
             await referalCollection.InsertOneAsync(referal);
 
             var ounce = referal.Id;
-            var referalLink = _config.GetSection("Domain:Name").Value + ounce;
+            var referalLink = _config.GetSection("Domain:Name").Value +"ref/"+ ounce;
 
             var updated = await referalCollection.UpdateOneAsync(r => r.Id == referal.Id,
                Builders<Referal>.Update.Set(u => u.PersonalLink, referalLink));
