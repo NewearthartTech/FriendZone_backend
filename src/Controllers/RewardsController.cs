@@ -48,7 +48,7 @@ namespace src.Controllers
             return rewards.ToArray();
         }
 
-        [HttpPost("/createReward")]
+        [HttpPost("createReward")]
         public async Task<RewardAttribute> CreateRewardAttributes([FromBody]RewardAttribute rewardAttribute)
         {
             var rewardAttributeCollection = _db.getCollection<RewardAttribute>();
