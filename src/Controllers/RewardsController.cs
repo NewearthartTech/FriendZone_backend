@@ -63,7 +63,7 @@ namespace src.Controllers
             var rewardAttributeCollection = _db.getCollection<RewardAttribute>();
 
             var referalResponse = new ReferalResponse();
-            var referal = await referalCollection.Find(r => r.PersonalLink == _config.GetSection("Domain:Name").Value +"ref/" + System.Web.HttpUtility.UrlDecode(personallinkId)).FirstAsync();
+            var referal = await referalCollection.Find(r => r.PersonalLink == _config.GetSection("Domain:Name").Value +"ref/" + personallinkId).FirstAsync();
             if(referal != null)
             {
                 var rewardAttribute = await GetRewardAttributes(referal.RewardId);
@@ -102,7 +102,7 @@ namespace src.Controllers
             }
 
             var referalCollection = _db.getCollection<Referal>();
-            var referal = await referalCollection.Find(r => r.PersonalLink == System.Web.HttpUtility.UrlDecode(rewardClaim.PersonalLink) && r.WalletAddress == rewardClaim.WalletAddress).FirstAsync();
+            var referal = await referalCollection.Find(r => r.PersonalLink == System.Web.HttpUtility.UrlDecode(rewardClaim.PersonalLink) && r.WalletAddress == rewardClaim.WalletAddress).FirstOrDefaultAsync();
             
             if (referal == null)
             {
@@ -127,7 +127,7 @@ namespace src.Controllers
         public async Task<ReferalResponse> CreateReferal([FromBody]Referal referal)
         {
             var rewardAttributeCollection = _db.getCollection<RewardAttribute>();
-            var rewardAttribute = await rewardAttributeCollection.Find(w => w.Id == referal.RewardId).FirstAsync();
+            var rewardAttribute = await rewardAttributeCollection.Find(w => w.Id == referal.RewardId).FirstOrDefaultAsync();
 
             if (rewardAttribute == null)
             {
