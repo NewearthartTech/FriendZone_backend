@@ -57,13 +57,13 @@ namespace src.Controllers
         }
 
         [HttpGet("ref/{personallink}")]
-        public async Task<ReferalResponse> GetReferalInfo(string personallink)
+        public async Task<ReferalResponse> GetReferalInfo(string personallinkId)
         {
             var referalCollection = _db.getCollection<Referal>();
             var rewardAttributeCollection = _db.getCollection<RewardAttribute>();
 
             var referalResponse = new ReferalResponse();
-            var referal = await referalCollection.Find(r => r.PersonalLink == System.Web.HttpUtility.UrlDecode(personallink)).FirstAsync();
+            var referal = await referalCollection.Find(r => r.PersonalLink == _config.GetSection("Domain:Name").Value +"ref/" + System.Web.HttpUtility.UrlDecode(personallink)).FirstAsync();
             if(referal != null)
             {
                 var rewardAttribute = await GetRewardAttributes(referal.RewardId);
