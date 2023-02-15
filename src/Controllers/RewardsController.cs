@@ -53,17 +53,17 @@ namespace src.Controllers
         {
             var rewardAttributeCollection = _db.getCollection<RewardAttribute>();
             await rewardAttributeCollection.InsertOneAsync(rewardAttribute);
-            return await GetRewardAttributes(rewardAttribute.RewardLink);
+            return await GetRewardAttributes(rewardAttribute.Id);
         }
 
-        [HttpGet("ref/{personallink}")]
-        public async Task<ReferalResponse> GetReferalInfo(string personallink)
+        [HttpGet("ref/{personallinkId}")]
+        public async Task<ReferalResponse> GetReferalInfo(string personallinkId)
         {
             var referalCollection = _db.getCollection<Referal>();
             var rewardAttributeCollection = _db.getCollection<RewardAttribute>();
 
             var referalResponse = new ReferalResponse();
-            var referal = await referalCollection.Find(r => r.PersonalLink == System.Web.HttpUtility.UrlDecode(personallink)).FirstAsync();
+            var referal = await referalCollection.Find(r => r.PersonalLink == _config.GetSection("Domain:Name").Value +"ref/" + System.Web.HttpUtility.UrlDecode(personallinkId)).FirstAsync();
             if(referal != null)
             {
                 var rewardAttribute = await GetRewardAttributes(referal.RewardId);
@@ -160,7 +160,7 @@ namespace src.Controllers
             await referalCollection.InsertOneAsync(referal);
 
             var ounce = referal.Id;
-            var referalLink = _config.GetSection("Domain:Name").Value + ounce;
+            var referalLink = _config.GetSection("Domain:Name").Value +"ref/"+ ounce;
 
             var updated = await referalCollection.UpdateOneAsync(r => r.Id == referal.Id,
                Builders<Referal>.Update.Set(u => u.PersonalLink, referalLink));
