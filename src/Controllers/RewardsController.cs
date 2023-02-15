@@ -151,6 +151,12 @@ namespace src.Controllers
             }
 
             var referalCollection = _db.getCollection<Referal>();
+            var existingReferal = await referalCollection.Find(rr => rr.RewardId == referal.RewardId && rr.WalletAddress == referal.WalletAddress).FirstOrDefaultAsync();
+            if (existingReferal != null)
+            {
+                return await GetReferal(existingReferal.PersonalLink);
+            }
+
             await referalCollection.InsertOneAsync(referal);
 
             var ounce = referal.Id;
