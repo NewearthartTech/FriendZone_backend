@@ -29,5 +29,6 @@ namespace src.models
         [Required]
         public int MaxPaidClicksPerUser { get; set; }
         public int NumberOfUsers { get; set; } = 0;
+        //public bool IsRewardClosed { get; set; } This will be implemented in the future
     }
 }
