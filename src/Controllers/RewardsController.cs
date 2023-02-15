@@ -56,7 +56,7 @@ namespace src.Controllers
             return await GetRewardAttributes(rewardAttribute.Id);
         }
 
-        [HttpGet("ref/{personallink}")]
+        [HttpGet("ref/{personallinkId}")]
         public async Task<ReferalResponse> GetReferalInfo(string personallinkId)
         {
             var referalCollection = _db.getCollection<Referal>();
