@@ -134,6 +134,13 @@ namespace src.Controllers
                 throw new Exception("No reward found");
             }
 
+            var referalCollection = _db.getCollection<Referal>();
+            var existingReferal = await referalCollection.Find(rr => rr.RewardId == referal.RewardId && rr.WalletAddress == referal.WalletAddress).FirstOrDefaultAsync();
+            if (existingReferal != null)
+            {
+                return await GetReferal(existingReferal.PersonalLink);
+            }
+
             if (rewardAttribute.NumberOfUsers < rewardAttribute.NumberOfUsersAbleToClaim)
             {
                 rewardAttribute.NumberOfUsers = rewardAttribute.NumberOfUsers + 1;
@@ -145,16 +152,10 @@ namespace src.Controllers
                 {
                     throw new Exception("failed to update referal");
                 }
-            } else
+            }
+            else
             {
                 throw new Exception("Maximum number of users reached that can cliam reward");
-            }
-
-            var referalCollection = _db.getCollection<Referal>();
-            var existingReferal = await referalCollection.Find(rr => rr.RewardId == referal.RewardId && rr.WalletAddress == referal.WalletAddress).FirstOrDefaultAsync();
-            if (existingReferal != null)
-            {
-                return await GetReferal(existingReferal.PersonalLink);
             }
 
             await referalCollection.InsertOneAsync(referal);
