@@ -3,7 +3,7 @@
 services:
 
   mongo:
-    container_name: mongo
-    image: mongo
+    container_name: db_container_mongo
+    image: mongo:3.6
     ports:
       - "27017:27017"
